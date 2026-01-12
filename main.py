@@ -4,27 +4,26 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'jasmine'
+
+app.secret_key = os.environ.get("SECRET_KEY", "jasmine")
 
 # ==============================
-# DATABASE CONFIG
-# SQLite (LOCAL) + PostgreSQL (RAILWAY)
+# DATABASE CONFIG (Fixed & Optimized)
 # ==============================
-DATABASE_URL = os.environ.get("DATABASE_URL")
+# 1. Look for Railway's DATABASE_URL
+database_url = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL:
-    # Fix for Railway postgres URL
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+if database_url:
+    # 2. Fix the 'postgres://' vs 'postgresql://' issue for SQLAlchemy 1.4+
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 else:
-    # Local SQLite fallback
+    # 3. Fallback to local SQLite if no environment variable is found
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "books.db")
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 db = SQLAlchemy(app)
 
 # ==============================
@@ -55,12 +54,10 @@ with app.app_context():
 # ROUTES
 # ==============================
 
-# Home Page
 @app.route('/')
 def home():
     return render_template('register_book.html')
 
-# Register Book
 @app.route('/register_book', methods=['POST'])
 def register_book():
     title = request.form.get('title')
@@ -94,20 +91,19 @@ def register_book():
         flash(f'Error: {str(e)}', 'error')
         return redirect(url_for('home'))
 
-# Success Page
 @app.route('/success')
 def success():
     return render_template('success.html')
 
-# View All Books
 @app.route('/books')
 def view_books():
     all_books = Book.query.order_by(Book.id.desc()).all()
     return render_template('book.html', books=all_books)
 
 # ==============================
-# RUN APP
+# RUN APP (Optimized for Cloud)
 # ==============================
 if __name__ == "__main__":
+    # Railway provides a PORT variable; locally it defaults to 5000
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
