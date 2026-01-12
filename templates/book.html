@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registered Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- IMPORTANT: class="books-page" -->
+<body class="books-page">
+
+    <h2>All Registered Books</h2>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>BN ID</th>
+                    <th>Genre</th>
+                    <th>Language</th>
+                    <th>Date Registered</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in books %}
+                <tr>
+                    <td>{{ b.id }}</td>
+                    <td>{{ b.title }}</td>
+                    <td>{{ b.author }}</td>
+                    <td>{{ b.publisher }}</td>
+                    <td>{{ b.bn_id }}</td>
+                    <td>{{ b.genre }}</td>
+                    <td>{{ b.language }}</td>
+                    <td>{{ b.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="back">
+        <a href="{{ url_for('home') }}">← Back to Registration</a>
+    </div>
+
+</body>
+</html>

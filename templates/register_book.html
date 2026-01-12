@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register a New Book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-box">
+            <h2>Register a New Book</h2>
+
+            <form action="{{ url_for('register_book') }}" method="POST">
+
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input type="text" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" name="author" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Publisher</label>
+                    <input type="text" name="publisher" required>
+                </div>
+
+                <div class="form-group">
+                    <label>BN / ID Number</label>
+                    <input type="text" name="bn_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input type="text" name="genre" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Language</label>
+                    <input type="text" name="language" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Register Book</button>
+            </form>
+
+
+            <a href="{{ url_for('view_books') }}" class="link">
+                View Registered Books
+            </a>
+
+        </div>
+    </div>
+</body>
+</html>
